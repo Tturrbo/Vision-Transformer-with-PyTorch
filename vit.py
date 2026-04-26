@@ -7,9 +7,13 @@ class ViT(nn.Module):
                  dropout=0.1, num_heads=12, ff_dim=3072, depth=12, num_classes=1000):
         super().__init__()
         self.patch_embed = PatchEmbedding(in_channels, embed_dim, patch_size)
-        cls_init = torch.randn(1,1,embed_dim) ** 0.02
-        self.cls_token = nn.Parameter(cls_init)
         num_patches = (image_size // patch_size) ** 2
+        #cls_init = torch.randn(1,1,embed_dim) ** 0.02
+        self.pos_embed = nn.Parameter(torch.zeros(1, 1 + num_patches, embed_dim))
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
+        nn.init.trunc_normal_(self.cls_token, std=0.02)
+        #self.cls_token = nn.Parameter(cls_init)
         pos_init = torch.randn(1,1+num_patches,embed_dim) * 0.02
         self.pos_embed = nn.Parameter(pos_init)
         self.dropout = nn.Dropout(p=dropout)
