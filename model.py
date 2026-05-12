@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from torchinfo import summary
 from datasets import load_dataset
 from torchvision import transforms
+from lion_pytorch import Lion
 
 torch.manual_seed(42)
 data = load_dataset("timm/oxford-iiit-pet")
@@ -64,6 +65,7 @@ vit_model = ViT(image_size=224, patch_size=16, in_channels=3, num_classes=1000, 
  depth=12, num_heads=12, ff_dim=3072, dropout=0.1)
 loss_func = nn.CrossEntropyLoss()
 optimizer = optim.AdamW(vit_model.parameters(), lr=1e-5)
+#optimizer = Lion(vit_model.parameters(), lr=1e-5)
 n_epochs = 3
 train(vit_model, optimizer, loss_func, train_loader, n_epochs)
 #summary(vit_model, input_size=batch.shape)
